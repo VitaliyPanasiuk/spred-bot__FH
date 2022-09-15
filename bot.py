@@ -1,8 +1,7 @@
 import asyncio
 import logging
-
-from aiogram import Bot, Dispatcher
 from aiogram.dispatcher.fsm.storage.memory import MemoryStorage
+from aiogram import Bot, Dispatcher
 
 from tgbot.config import load_config
 from tgbot.handlers.admin import admin_router
@@ -25,6 +24,7 @@ def register_global_middlewares(dp: Dispatcher, config):
 
 async def main():
     await start_db.postgre_start()
+    await start_db.postgre_insert_table()
     logging.basicConfig(
         level=logging.INFO,
         format=u'%(filename)s:%(lineno)d #%(levelname)-8s [%(asctime)s] - %(name)s - %(message)s',
