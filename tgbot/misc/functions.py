@@ -14,6 +14,5 @@ async def auf_status(user_id):
     user = cur.fetchall()
     answer = False
     if user:
-        print('user in system')
         answer = True
     return answer
