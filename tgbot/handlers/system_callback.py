@@ -11,7 +11,7 @@ from tgbot.db import db_update
 
 from tgbot.misc.functions import auf_status
 
-from tgbot.keyboards.inlineBtn import main_page
+from tgbot.keyboards.inlineBtn import main_page,user_settings_btn
 
 import datetime
 import asyncio
@@ -21,7 +21,7 @@ system_callback_router = Router()
 config = load_config(".env")
 bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 
-base = psycopg2.connect(config.db.db_uri, sslmode="require")
+base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
 cur = base.cursor()
 
 
@@ -64,3 +64,14 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
 💰 Баланс: {user[2]} USDT'''
     if text != str(callback_query.message.text):
         await callback_query.message.edit_text(text,reply_markup=btn.as_markup())
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

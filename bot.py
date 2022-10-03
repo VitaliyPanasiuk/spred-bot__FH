@@ -7,6 +7,9 @@ from tgbot.config import load_config
 from tgbot.handlers.admin import admin_router
 from tgbot.handlers.user import user_router
 from tgbot.handlers.system_callback import system_callback_router
+from tgbot.handlers.user_settings import user_settings_router
+from tgbot.handlers.choose_directions import choose_directions_router
+from tgbot.handlers.settings_directions import settings_directions_router
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.db import start_db
 from tgbot.services import broadcaster
@@ -40,7 +43,10 @@ async def main():
     for router in [
         admin_router,
         user_router,
+        user_settings_router,
         system_callback_router,
+        choose_directions_router,
+        settings_directions_router,
     ]:
         dp.include_router(router)
 

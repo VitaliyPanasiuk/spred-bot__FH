@@ -12,7 +12,7 @@ from tgbot.db import db_update
 from tgbot.misc.functions import auf_status
 from tgbot.misc.messages import info
 
-from tgbot.keyboards.inlineBtn import main_page, balance_btn,home_btn
+from tgbot.keyboards.inlineBtn import main_page, balance_btn,home_btn,user_settings_btn
 
 import datetime
 import asyncio
@@ -22,7 +22,7 @@ user_router = Router()
 config = load_config(".env")
 bot = Bot(token=config.tg_bot.token, parse_mode='HTML')
 
-base = psycopg2.connect(config.db.db_uri, sslmode="require")
+base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
 cur = base.cursor()
 
 @user_router.message(commands=["start"])
@@ -30,10 +30,11 @@ async def user_start(message: Message):
     user_id = message.from_user.id
     user_name = message.from_user.first_name
     auf = await auf_status(user_id)
-    cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
-    spreads_on = cur.fetchone()
-    btn = main_page(spreads_on[0])
+    
     if auf:
+        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        spreads_on = cur.fetchone()
+        btn = main_page(spreads_on[0])
         cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
@@ -54,6 +55,9 @@ async def user_start(message: Message):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
+        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        spreads_on = cur.fetchone()
+        btn = main_page(spreads_on[0])
         await bot.send_message(user_id,f'''🏠 Главное меню
 
 🎫 Ваш ID: {user_id}
@@ -111,6 +115,8 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
         cur.execute("INSERT INTO user_subscriptions (user_id, valid_to) VALUES (%s, %s)",(user_id,valid_time))
         base.commit()
         
+        
+
     
     
     

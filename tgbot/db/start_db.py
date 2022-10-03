@@ -6,7 +6,7 @@ from tgbot.config import load_config
 config = load_config(".env")
 
 async def postgre_start():
-    base = psycopg2.connect(config.db.db_uri, sslmode="require")
+    base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
     cur = base.cursor()
     if base:
         print('data base connect Ok!')
@@ -150,7 +150,7 @@ async def postgre_start():
 
 
 async def postgre_insert_table():
-    base = psycopg2.connect(config.db.db_uri, sslmode="require")
+    base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
     cur = base.cursor()
     if base:
         print('start insert base row')

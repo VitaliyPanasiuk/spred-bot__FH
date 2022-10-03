@@ -6,13 +6,16 @@ from tgbot.config import load_config
 config = load_config(".env")
 
 async def register_user(user_id,user_name):
-    base = psycopg2.connect(config.db.db_uri, sslmode="require")
+    base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
     cur = base.cursor()
     
     cur.execute("INSERT INTO users (telegram_id, user_name) VALUES (%s, %s)",(user_id,user_name))
-    # cur.execute("INSERT INTO user_subscriptions (user_id, valid_to) VALUES (%s, %s)",(user_id,'0000-00-00 00:00:00'))
-    # cur.execute("INSERT INTO minimal_spread (user_id,spread_value) VALUES (%s, %s)",(user_id,0))
-    # cur.execute("INSERT INTO is_direction_on_for_user (user_id, spread_direction,is_on) VALUES (%s, %s, %s)",(user_id,'false',False))
+    base.commit()
+    
+    cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
+    user = cur.fetchone()
+    cur.execute("INSERT INTO user_directions_exchanges (user_id) VALUES (%s)",(user[0],))
+    
     
     base.commit()
     cur.close()
