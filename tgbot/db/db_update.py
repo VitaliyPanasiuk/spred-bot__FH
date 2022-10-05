@@ -14,7 +14,11 @@ async def register_user(user_id,user_name):
     
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
     user = cur.fetchone()
-    cur.execute("INSERT INTO user_directions_exchanges (user_id) VALUES (%s)",(user[0],))
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO user_directions_exchanges (user_id,spread_direction) VALUES (%s,%s)",(user[0],i))
+        i += 1
+    cur.execute("INSERT INTO minimal_spread (user_id) VALUES (%s)",(user[0],))
     
     
     base.commit()

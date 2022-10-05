@@ -111,7 +111,6 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
         now = datetime.datetime.now()
         valid_time = now + datetime.timedelta(hours=2)
         # valid_time = now.strftime("%d-%m-%Y %H:%M:%S")
-        print(valid_time)
         cur.execute("INSERT INTO user_subscriptions (user_id, valid_to) VALUES (%s, %s)",(user_id,valid_time))
         base.commit()
         

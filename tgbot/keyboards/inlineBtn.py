@@ -88,6 +88,7 @@ def user_settings_btn():
     ))
     example.row(types.InlineKeyboardButton(
         text='Мінімальний спред',
+        caption = 'Найпростіші (Найліквідніші) зв’язки',
         callback_data='minimal spread'
     ))
     example.row(types.InlineKeyboardButton(
@@ -579,3 +580,48 @@ def settings_simple_direction(user_id,direction):
         callback_data='main page'
     ))
     return example
+
+def min_spread_settings_btn():
+    example = InlineKeyboardBuilder()
+    example.row(types.InlineKeyboardButton(
+        text='Найпростіші (Найліквідніші) зв’язки',
+        callback_data='simple direction spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Міжбіржові',
+        callback_data='interexchange spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Готівка',
+        callback_data='cash spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Binance',
+        callback_data='binance spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='OKX',
+        callback_data='okx spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='ByBit',
+        callback_data='bybit spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Wise',
+        callback_data='wise spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='LocalBitcoins',
+        callback_data='localbitcoins spread'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Главное меню',
+        callback_data='main page'
+    ))
+    
+    return example
+
+
+
+

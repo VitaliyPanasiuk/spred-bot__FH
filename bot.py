@@ -13,6 +13,7 @@ from tgbot.handlers.settings_directions import settings_directions_router
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.db import start_db
 from tgbot.services import broadcaster
+from tgbot.misc.functions import mailing,check_sub
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +54,7 @@ async def main():
     register_global_middlewares(dp, config)
 
     await on_startup(bot, config.tg_bot.admin_ids)
-    await dp.start_polling(bot)
+    await asyncio.gather(check_sub(),dp.start_polling(bot), mailing())
 
 
 if __name__ == '__main__':

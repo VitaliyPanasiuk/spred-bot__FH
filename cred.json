@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "supple-cosine-364508",
+  "private_key_id": "a552a794efb5b360c85995a78d8156e55219c3bf",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDKO/aE2NaX7WBa\ndjrnfhyGtYUPMAwkF/Mgb3xlXkUeQ58pjna4bEy6TV12uFO9x21b69xgBdMcwl3v\noPYndRMS5qtIZvqZ2FWdw8vsfmKeUCG7c1GjZCKig+VzHNiGA/7S1DBGythBUr3o\nT4VItoaanLoxEwcUlgkSzWZg2X/Ml7oCKL1wEeasROvk6uhfyC3ZM/RlwZu7ho+/\nFjRVjXhahJfubF11v3RxVNZWhFd2jIQRAw+xEMPQqyuxJBB3bRIzx6akqfA7vtxs\ncZcdZaedKvTge2uFPWvDZGZY0/G9T49KmR6X2Lt0WQN22ioNV0yQs0C9gX9L8SZ2\nWUrd4fS3AgMBAAECggEAIM7ph1PGPI99+i8ED1oeNpxsIbKhxZk9EB4GCEvq2qYN\nxCgginrHV9IFP6VXsIoR67+v2MQZI6lEpANw66XKml5hmzVZomu+OAHzq0I1rYlC\nb66dp+wu0j6jkrEzT0qGpJ1X16RAwRgzRuTfspQp8htK+Xskwuo0PqCj40JlwULy\nQuVhzzsS+A83vActTmxlCcM2FHeV0QGfyqqKrL+Fao/J5aw0YMVTqkiBXsVaxDKE\nGYEQF0l04tIY+XjUSdV7OnaHnXjnnomDg+CXbCV1OfUyEMgtIr0NeZaL20wbsAB3\nBQ23AAOiPb22q5TE+jvtUORNEcGjMsrajNPQdP+mAQKBgQDrsdhmF8kOnBONvywU\nHRxyQ2z1lLkw8MtUklfrROhNt+s8WLvo28Po0Q2rwHv/ZGu5O5SF4aTw0nsTyuBV\nj6S8oDXH9xAyLnpZbU65rE3pIx2+wdsrCPbucEYZqRoMKYiuB4Ovcd/dzwPGWxbm\np60shDzzc9/VX+zCqvOpPZQBIQKBgQDbqCjuo0qGUHovdCuhdwYvAy7TGSGYn2dr\na60DWfuagC+w+qvId3YkMf7X94g18EqVw8dM7pbfN865z+BjlOkmxQhI6U1XAqVa\nalR7qpIHTbB2HsO+xyd4vACyWTzoLNCI6AzcbAZLmiloCGrVn9DallfqhGngIsUU\ncLWi9HrC1wKBgCxWAAb0YnXFFkiLtZbzAu7bkBuCJnP2V8lI3hD7nVdBSZbIelCL\nRob9DD1KsAiSs1DczEuC7qv+a/iFKT3vD2YMHRHIf9twssMvtKdoqh8449eGT9wA\ni7K+m/EnxiaTiYpzD2ppWVs4HdWqPNyWnhTJq02AdpKEwNy9m6gyVS0BAoGBAKI1\nq4yXH7jSg3i5tGK3r+RV2GVh4LKBvPDSAmFAORKeaRmr8+HFfoQ6O3UnQfp7Kckx\nW+OPKfFLmCkVvyIq3IaZ6IVXbJq9xHhhn2P30YD9OTvxeiJPlfGN/IG4bscSGSmR\nG7ZHO9rmzH8cADEjpStW7TOtdzZi1uFCXpApNOLfAoGBAIveTm+j8E6wtN1lkaSs\n6qFZExHYClO7s5dXnYgWwy/fsosAvlVATXr1TQBVFBZivNdBN/Wv9fMnqGhspqci\nYEkYWErfZXYrYwfUwOc1oOIxD4m3/GwyeODkbcanEJ0OHaf3bXltJ65+wmCtYUpC\nZEGA6M8bpw9lKiSiDHWFLraz\n-----END PRIVATE KEY-----\n",
+  "client_email": "spred-bot@supple-cosine-364508.iam.gserviceaccount.com",
+  "client_id": "115318337360066591785",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/spred-bot%40supple-cosine-364508.iam.gserviceaccount.com"
+}
