@@ -10,140 +10,202 @@ async def postgre_start():
     cur = base.cursor()
     if base:
         print('data base connect Ok!')
-    cur.execute('''CREATE TABLE IF NOT EXISTS users(
-        id                      serial
-            constraint users_pk
-                primary key,
-        telegram_id             text not null,
-        user_name               varchar(45),
-        trial_version_activated boolean default false,
-        spreads_on               boolean default false,
-        balance_usdt            numeric default 0
-    );
+    cur.execute('''CREATE table if not exists users(
+    id                      serial
+        constraint users_pk
+            primary key,
+    telegram_id             text not null,
+    user_name               varchar(45),
+    trial_version_activated boolean default false,
+    spreads_on              boolean default false,
+    balance_usdt            numeric default 0
+);
+
+create unique index if not exists users_telegram_id_uindex
+    on users (telegram_id);
     
-    DO $$ BEGIN
+DO $$ BEGIN
         IF to_regtype('order_status') IS NULL THEN
             CREATE TYPE order_status AS ENUM ('pending', 'success');
         END IF;
-    END $$;
-    --DROP TYPE IF EXISTS order_status;
-    --CREATE TYPE order_status AS ENUM ('pending', 'success');
+END $$;
 
-    
-    create unique index if not exists users_telegram_id_uindex
-        on users (telegram_id);
-        
-        
-    create table if not exists user_orders(
-        id             serial
-            constraint user_orders_pk
-                primary key,
-        user_id        integer
-            constraint user_orders_users_telegram_id_fk
-                references users (id),
-        order_created  timestamp,
-        order_sum_usdt numeric,
-        status         order_status
-    );  
-    
-    
-    create table if not exists user_subscriptions(
-        id       serial
-            constraint user_subscriptions_pk
-                primary key,
-        user_id  integer
-            constraint user_subscriptions_users_id_fk
-                references users (id),
-        valid_to timestamp
-    );   
-    
-    
-    create table if not exists promocodes(
-        id       serial
-            constraint promocodes_pk
-                primary key,
-        code     varchar(45),
-        discount int
-    );   
-    
-    
-    create table if not exists spread_directions(
-        id   serial
-            constraint spread_directions_pk
-                primary key,
-        name varchar(60)
-    );
-    
-    
-    create table if not exists exchanges(
-        id   serial
-            constraint exchanges_pk
-                primary key,
-        name varchar(60)
-    );
-    
-    
-    create table if not exists banks(
-        id   serial
-            constraint banks_pk
-                primary key,
-        name varchar(60)
-    );
-    
-    
-    create table if not exists cryptocurrencies(
-        id   serial
-            constraint cryptocurrencies_pk
-                primary key,
-        name varchar(60)
-    );
+create table if not exists user_orders
+(
+    id             serial
+        constraint user_orders_pk
+            primary key,
+    user_id        integer
+        constraint user_orders_users_telegram_id_fk
+            references users,
+    order_created  timestamp,
+    order_sum_usdt numeric,
+    status         order_status
+);
 
+create table if not exists user_subscriptions
+(
+    id       serial
+        constraint user_subscriptions_pk
+            primary key,
+    user_id  integer,
+    valid_to timestamp
+);
 
-    create table if not exists fiat_currencies(
-        id   serial
-            constraint fiat_currencies_pk
-                primary key,
-        name varchar(60)
-    );
+create table if not exists promocodes
+(
+    id       serial
+        constraint promocodes_pk
+            primary key,
+    code     varchar(45),
+    discount integer
+);
 
+create table if not exists spread_directions
+(
+    id   serial
+        constraint spread_directions_pk
+            primary key,
+    name varchar(60)
+);
 
-    create table if not exists operation_options(
-        id   serial
-            constraint operation_options_pk
-                primary key,
-        name text
-    );
-    
-    
-    create table if not exists minimal_spread(
-        id               serial
-            constraint minimal_spread_pk
-                primary key,
-        user_id          int
-            constraint minimal_spread_users_id_fk
-                references users,
-        spread_direction int
-            constraint minimal_spread_spread_directions_id_fk
-                references spread_directions,
-        spread_value     int
-    );
+create table if not exists exchanges
+(
+    id   serial
+        constraint exchanges_pk
+            primary key,
+    name varchar(60)
+);
 
+create table if not exists banks
+(
+    id   serial
+        constraint banks_pk
+            primary key,
+    name varchar(60)
+);
 
-    create table if not exists is_direction_on_for_user(
-        id               serial
-            constraint is_direction_on_for_user_pk
-                primary key,
-        user_id          int
-            constraint is_direction_on_for_user_users_id_fk
-                references users,
-        spread_direction int
-            constraint is_direction_on_for_user_spread_directions_id_fk
-                references spread_directions,
-        is_on            boolean default false
-    );
-                ''')
-    
+create table if not exists cryptocurrencies
+(
+    id   serial
+        constraint cryptocurrencies_pk
+            primary key,
+    name varchar(60)
+);
 
+create table if not exists fiat_currencies
+(
+    id   serial
+        constraint fiat_currencies_pk
+            primary key,
+    name varchar(60)
+);
+
+create table if not exists minimal_spread
+(
+    id               serial
+        constraint minimal_spread_pk
+            primary key,
+    user_id          integer
+        constraint minimal_spread_users_id_fk
+            references users,
+    spread_direction integer
+        constraint minimal_spread_spread_directions_id_fk
+            references spread_directions,
+    spread_value     numeric
+);
+
+create table if not exists is_direction_on_for_user
+(
+    id               serial
+        constraint is_direction_on_for_user_pk
+            primary key,
+    user_id          integer
+        constraint is_direction_on_for_user_users_id_fk
+            references users,
+    spread_direction integer
+        constraint is_direction_on_for_user_spread_directions_id_fk
+            references spread_directions,
+    is_on            boolean default false
+);
+
+create table if not exists operation_options
+(
+    id   serial
+        constraint operation_options_pk
+            primary key,
+    name text
+);
+
+create table if not exists user_directions_exchanges
+(
+    id               serial
+        constraint user_directions_exchanges_pk
+            primary key,
+    user_id          integer
+        constraint "user_directions_exchanges		_users_id_fk"
+            references users,
+    spread_direction integer
+        constraint "user_directions_exchanges		_spread_directions_id_fk"
+            references spread_directions,
+    exchange_chosen  text[]
+);
+
+create table if not exists user_directions_banks
+(
+    id               serial
+        constraint "user_directions_banks		_pk"
+            primary key,
+    user_id          integer
+        constraint "user_directions_banks		_users_id_fk"
+            references users,
+    spread_direction integer
+        constraint "user_directions_banks		_spread_directions_id_fk"
+            references spread_directions,
+    bank_chosen      text[]
+);
+
+create table if not exists user_directions_cryptocurrency
+(
+    id                    serial
+        constraint "user_directions_cryptocurrency		_pk"
+            primary key,
+    user_id               integer
+        constraint "user_directions_cryptocurrency		_users_id_fk"
+            references users,
+    spread_direction      integer
+        constraint "user_directions_cryptocurrency		_spread_directions_id_fk"
+            references spread_directions,
+    cryptocurrency_chosen text[]
+);
+
+create table if not exists user_directions_fiat_currency
+(
+    id                   serial
+        constraint "user_directions_fiat_currency		_pk"
+            primary key,
+    user_id              integer
+        constraint "user_directions_fiat_currency		_users_id_fk"
+            references users,
+    spread_direction     integer
+        constraint "user_directions_fiat_currency		_spread_directions_id_fk"
+            references spread_directions,
+    fiat_currency_chosen text[]
+);
+
+create table if not exists user_directions_operation_options
+(
+    id                       serial
+        constraint "user_directions_operation_options		_pk"
+            primary key,
+    user_id                  integer
+        constraint "user_directions_operation_options		_users_id_fk"
+            references users,
+    spread_direction         integer
+        constraint "user_directions_operation_options		_spread_directions_id_fk"
+            references spread_directions,
+    operation_options_chosen text[]
+);''')
     base.commit()
     cur.close()
     base.close()
