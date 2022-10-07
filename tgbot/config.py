@@ -38,17 +38,17 @@ def load_config(path: str = None):
 
     return Config(
         tg_bot=TgBot(
-            token=env.str("BOT_TOKEN"),
-            token2=env.str("BOT_TOKEN2"),
-            admin_ids=list(map(int, env.list("ADMINS"))),
-            use_redis=env.bool("USE_REDIS"),
+            token='5257942822:AAFqBBqGZs6UJZsF3fJ6fY-f8pCFQelxXRw',
+            token2='5411810705:AAFVmiB1l4KbCJ7zI_U-z_hULE9t2fyt9xQ',
+            admin_ids=(),
+            use_redis=False,
         ),
         db=DbConfig(
-            host=env.str('DB_HOST'),
-            password=env.str('DB_PASS'),
-            user=env.str('DB_USER'),
-            database=env.str('DB_NAME'),
-            db_uri = env.str('DB_URI')
+            host='localhost',
+            password='2545',
+            user='spread',
+            database='spread-bot',
+            db_uri = ''
         ),
         misc=Miscellaneous()
     )

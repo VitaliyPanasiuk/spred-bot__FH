@@ -54,7 +54,7 @@ async def main():
     register_global_middlewares(dp, config)
 
     await on_startup(bot, config.tg_bot.admin_ids)
-    await asyncio.gather(check_sub(),dp.start_polling(bot), mailing())
+    await asyncio.gather(dp.start_polling(bot), mailing(),check_sub())
 
 
 if __name__ == '__main__':

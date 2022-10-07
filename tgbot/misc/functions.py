@@ -194,7 +194,7 @@ async def mailing():
             min_spread = cur.fetchone()
             
             if spread_direction[0] and spread_direction[0] == 'Найпростіші (Найліквідніші) зв’язки':
-                if 'Binance' in settings[0]:
+                if settings[0] and 'Binance' in settings[0]:
                     flagtext2 = False
                     
                     service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
@@ -267,7 +267,7 @@ async def mailing():
                                                     flagtext = True
                                                 message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
                                                 
-                if 'ByBit' in settings[0]:
+                if settings[0] and 'ByBit' in settings[0]:
                     flagtext2 = False
                     service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                     all_sheets = service.sheet.worksheets()
@@ -338,7 +338,7 @@ async def mailing():
                                                         flagtext = True
                                                     message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
                                                     
-                if 'OKX' in settings[0]:
+                if settings[0] and settings[0] and  'OKX' in settings[0]:
                     flagtext2 = False
                     service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                     all_sheets = service.sheet.worksheets()
@@ -409,7 +409,7 @@ async def mailing():
                                                         flagtext = True
                                                     message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
             elif spread_direction[0] and spread_direction[0] == 'Міжбіржові':
-                if 'Binance' in settings[0] and 'ByBit' in settings[0]:
+                if settings[0] and settings[0] and 'Binance' in settings[0] and 'ByBit' in settings[0]:
                     flagtext2 = False
                     
                     
@@ -611,7 +611,7 @@ async def mailing():
                                                     flagtext = True
                                                 message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
                                                 
-                if 'Binance' in settings[0] and 'OKX' in settings[0]:
+                if settings[0] and 'Binance' in settings[0] and 'OKX' in settings[0]:
                     flagtext2 = False
                     
                     
@@ -813,7 +813,7 @@ async def mailing():
                                                     flagtext = True
                                                 message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
             elif spread_direction[0] and spread_direction[0] == 'Готівка':
-                if 'Binance' in settings[0]:
+                if settings[0] and 'Binance' in settings[0]:
                         flagtext2 = False
                         
                         
@@ -840,7 +840,7 @@ async def mailing():
                                                 message += '\Binance профіт\n'
                                                 flagtext2 = True
                                             message += f'{result[line][0]}+ {result[0][row]}  +{num}%\n'
-                if 'ByBit' in settings[0]:
+                if settings[0] and 'ByBit' in settings[0]:
                         flagtext2 = False
                         
                         
@@ -932,7 +932,8 @@ async def mailing():
                     mess = await parse_binance2(i,settings,min_spread,sh.title)
                     message += mess
             
-            await bot2.send_message(user[1],message)  
+            if message:
+                await bot2.send_message(user[1],message)  
             
         await asyncio.sleep(45)                                      
 
@@ -947,7 +948,6 @@ async def check_sub():
         for user in users:
             now = datetime.datetime.now()
             if now >= user[2]:
-                print('delete from user_subscriptions')
                 cur.execute("DELETE FROM user_subscriptions WHERE id = %s",(user[0],))
                 base.commit()
             

@@ -3,6 +3,8 @@ from aiogram.types import Message,FSInputFile
 from tgbot.config import load_config
 from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.dispatcher.fsm.state import State, StatesGroup
+from tgbot.misc.states import promo_state
+
 
 import psycopg2
 from psycopg2 import sql
@@ -12,7 +14,7 @@ from tgbot.db import db_update
 from tgbot.misc.functions import auf_status
 from tgbot.misc.messages import info
 
-from tgbot.keyboards.inlineBtn import main_page, balance_btn,home_btn,user_settings_btn
+from tgbot.keyboards.inlineBtn import main_page, balance_btn,home_btn,user_settings_btn,sub_btn
 
 import datetime
 import asyncio
@@ -41,6 +43,7 @@ async def user_start(message: Message):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
+        print(user)
         await bot.send_message(user_id,f'''🏠 Главное меню
 
 🎫 Ваш ID: {user_id}
@@ -111,11 +114,82 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
         now = datetime.datetime.now()
         valid_time = now + datetime.timedelta(hours=2)
         # valid_time = now.strftime("%d-%m-%Y %H:%M:%S")
-        cur.execute("INSERT INTO user_subscriptions (user_id, valid_to) VALUES (%s, %s)",(user_id,valid_time))
+        cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
+        user = cur.fetchone()
+        cur.execute("INSERT INTO user_subscriptions (user_id, valid_to) VALUES (%s, %s)",(user[0],valid_time))
         base.commit()
         
-        
+@user_router.callback_query(lambda c: c.data == 'subscription')
+async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
+    user_id = callback_query.from_user.id
+    btn = sub_btn()
+    cur.execute("SELECT id,discount from users where telegram_id = %s",(str(user_id),) )
+    user = cur.fetchone()
+    print(user)
+    cur.execute("SELECT valid_to from user_subscriptions where user_id = %s",(user[0],) )
+    trial_version_activated = cur.fetchone()
+    message = f'''💥 Подписка
 
+{trial_version_activated[0] if trial_version_activated and trial_version_activated[0] else "🚫 Нет активной подписки"}
+❇️ Скидка: {user[1]} %
+
+👉🏻 Преимущества подписки:
+1️⃣ Вам будут доступны проценты прибыли на всех видах спредов более 0.35%'''
+    await callback_query.message.edit_text(message,reply_markup=btn.as_markup(),parse_mode="HTML")
+        
+        
+@user_router.callback_query(lambda c: c.data == 'activate promo')
+async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
+    user_id = callback_query.from_user.id
+    messages = '''💥 Активировать промокод
+
+Промокод должен быть длиной в 20 символов.
+
+Введите промокод в чат'''
+    await state.update_data(id=callback_query.message.message_id)
+    await callback_query.message.edit_text(messages)
+    await state.set_state(promo_state.name)
+
+
+@user_router.message_handler(content_types=types.ContentType.TEXT, state=promo_state.name)
+async def typeOfOrder(message: types.Message, state: FSMContext):
+    user_id = message.from_user.id
+    cur.execute("SELECT * FROM promocodes WHERE code = %s", (message.text,))
+    promo = cur.fetchone()
     
-    
+    if promo:
+        cur.execute("UPDATE users SET discount = %s WHERE telegram_id = %s",(int(promo[2]),str(user_id)))
+        base.commit()
+        await message.delete()
+        messages = 'Промокод активовано.'
+        await bot.send_message(user_id,messages)
+        cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
+                            FROM users
+                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
+                                LEFT JOIN user_subscriptions us on us.user_id = users.id
+                        WHERE telegram_id = %s''',(str(user_id),))
+        user = cur.fetchone()
+        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        spreads_on = cur.fetchone()
+        btn = main_page(spreads_on[0])
+        data = await state.get_data()
+        await bot.edit_message_text(chat_id = message.chat.id ,message_id=data['id'], text = f'''🏠 Главное меню
+
+🎫 Ваш ID: {user_id}
+📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
+{user[3] if user[3] else "🚫 Нет активной подписки"}
+💰 Баланс: {user[2]} USDT''' ,reply_markup=btn.as_markup(),parse_mode="HTML")
+        await asyncio.sleep(2.5)
+        await bot.delete_message(chat_id = message.chat.id ,message_id = message.message_id + 1 )
+        cur.execute("DELETE FROM promocodes WHERE code = %s",(message.text,))
+        base.commit()
+        
+        await state.clear()
+    else:
+        await message.delete()
+        messages = '🚫 такого кода не існує.'
+        await bot.send_message(user_id,messages)
+        await asyncio.sleep(2.5)
+        await bot.delete_message(chat_id = message.chat.id ,message_id = message.message_id + 1 )
+        await state.set_state(promo_state.name)
     

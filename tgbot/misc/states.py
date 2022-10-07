@@ -10,3 +10,7 @@ class min_spread_state(StatesGroup):
     num = State()
     direction = State()
     id = State()
+    
+class promo_state(StatesGroup):
+    name = State()
+    id = State()

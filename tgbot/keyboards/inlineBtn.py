@@ -3,6 +3,7 @@ from aiogram import Bot, types
 from tgbot.config import load_config
 
 from tgbot.misc.functions import auf_status,get_settings_directions
+from tgbot.misc.messages import price
 
 import psycopg2
 from psycopg2 import sql
@@ -617,6 +618,47 @@ def min_spread_settings_btn():
     ))
     example.row(types.InlineKeyboardButton(
         text='Главное меню',
+        callback_data='main page'
+    ))
+    
+    return example
+
+def sub_btn():
+    example = InlineKeyboardBuilder()
+    example.row(types.InlineKeyboardButton(
+        text=f'Активувати промокод',
+        callback_data='activate promo'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'1 година = {price["1 hour"]} USDT',
+        callback_data='buy 1 hour'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'1 день = {price["1 day"]} USDT',
+        callback_data='buy 1 day'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'7 днів = {price["7 day"]} USDT',
+        callback_data='buy 7 day'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'1 місяць = {price["1 month"]} USDT',
+        callback_data='buy 1 month'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'3 місяці = {price["3 month"]} USDT',
+        callback_data='buy 3 month'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'1 рік = {price["1 year"]} USDT',
+        callback_data='buy 1 year'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'Назавжди = {price["forever"]} USDT',
+        callback_data='buy forever'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text=f'Главное меню',
         callback_data='main page'
     ))
     
