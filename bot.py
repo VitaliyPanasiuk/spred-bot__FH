@@ -62,3 +62,20 @@ if __name__ == '__main__':
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
         logger.error("Бот був вимкнений!")
+
+
+[Unit]
+Description=Spread-bot online bot
+After=network.target
+
+[Service]
+EnvironmentFile=/etc/environment
+ExecStart=/home/spread_bot/spred-bot__FH/venv/bin/python bot.py
+ExecReload=/home/spread_bot/spred-bot__FH/venv/bin/python bot.py
+WorkingDirectory=/home/spread_bot/spred-bot__FH/
+KillMode=process
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

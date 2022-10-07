@@ -18,7 +18,8 @@ async def postgre_start():
     user_name               varchar(45),
     trial_version_activated boolean default false,
     spreads_on              boolean default false,
-    balance_usdt            numeric default 0
+    balance_usdt            numeric default 0,
+    discount numeric default 0
 );
 
 create unique index if not exists users_telegram_id_uindex
