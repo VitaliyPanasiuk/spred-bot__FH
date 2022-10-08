@@ -1,9 +1,9 @@
 info = {
     'contacts': '''
-contacts
+контакти
     ''',
     'instructions': '''
-instructions
+інструкції
     ''',
 }
 def spread(min,direction):

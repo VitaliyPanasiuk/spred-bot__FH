@@ -18,38 +18,38 @@ cur = base.cursor()
 def main_page(spreads_on):
     example = InlineKeyboardBuilder()
     example.row(types.InlineKeyboardButton(
-        text='🔥 Использовать два часа подписки 🔥',
+        text='🔥 Використати дві години підписки 🔥',
         callback_data='two hours'
     ))
     example.row(types.InlineKeyboardButton(
-        text='📊 Загрузить спреды',
+        text='📊 Завантажити спреди',
         callback_data='download spread'
     ))
     example.row(types.InlineKeyboardButton(
-        text=f'ℹ️ Спреды включены {"🟢" if spreads_on else "🔴"}',
+        text=f'ℹ️ Спреди увімкнено {"🟢" if spreads_on else "🔴"}',
         callback_data='change spread'
     ))
     example.row(types.InlineKeyboardButton(
         text='💰 Баланс',
         callback_data='balance'
     ),types.InlineKeyboardButton(
-        text='💥 Подписка',
+        text='💥 Підписка',
         callback_data='subscription'
     ))
     example.row(types.InlineKeyboardButton(
-        text='⚙️ Настройки',
+        text='⚙️ Налаштування',
         callback_data='settings'
     ))
     example.row(types.InlineKeyboardButton(
-        text='📲 Инструкции',
+        text='📲 Інструкціїї',
         callback_data='instructions'
     ))
     example.row(types.InlineKeyboardButton(
-        text='📞 Контакты',
+        text='📞 Контакти',
         callback_data='contacts'
     ))
     example.row(types.InlineKeyboardButton(
-        text='♻️ Обновить меню',
+        text='♻️ Оновити меню',
         callback_data='reload menu'
     ))
     
@@ -58,7 +58,7 @@ def main_page(spreads_on):
 def balance_btn():
     example = InlineKeyboardBuilder()
     example.row(types.InlineKeyboardButton(
-        text='Пополнить',
+        text='Поповнити',
         callback_data='donate'
     ))
     example.row(types.InlineKeyboardButton(
@@ -66,7 +66,7 @@ def balance_btn():
         callback_data='orders'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Главное меню',
+        text='Головне меню',
         callback_data='main page'
     ))
     
@@ -75,7 +75,7 @@ def balance_btn():
 def home_btn():
     example = InlineKeyboardBuilder()
     example.row(types.InlineKeyboardButton(
-        text='Главное меню',
+        text='Головне меню',
         callback_data='main page'
     ))
     
@@ -84,12 +84,11 @@ def home_btn():
 def user_settings_btn():
     example = InlineKeyboardBuilder()
     example.row(types.InlineKeyboardButton(
-        text='Вибрати напрямки',
+        text='Обрати напрямки',
         callback_data='choose directions'
     ))
     example.row(types.InlineKeyboardButton(
         text='Мінімальний спред',
-        caption = 'Найпростіші (Найліквідніші) зв’язки',
         callback_data='minimal spread'
     ))
     example.row(types.InlineKeyboardButton(
@@ -97,7 +96,7 @@ def user_settings_btn():
         callback_data='settings directions'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Главное меню',
+        text='Головне меню',
         callback_data='main page'
     ))
     
@@ -658,7 +657,7 @@ def sub_btn():
         callback_data='buy forever'
     ))
     example.row(types.InlineKeyboardButton(
-        text=f'Главное меню',
+        text=f'Головне меню',
         callback_data='main page'
     ))
     

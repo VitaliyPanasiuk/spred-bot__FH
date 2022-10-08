@@ -37,11 +37,11 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
     user = cur.fetchone()
-    await callback_query.message.edit_text(f'''🏠 Главное меню
+    await callback_query.message.edit_text(f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
-📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
-{user[3] if user[3] else "🚫 Нет активной подписки"}
+📊 Мін - Макс спред: {user[4] if user[4] else "сперди не налаштовані"}
+{user[3] if user[3] else "🚫 Немає активної підписки"}
 💰 Баланс: {user[2]} USDT''',reply_markup=btn.as_markup())
     
 @system_callback_router.callback_query(lambda c: c.data == 'reload menu')
@@ -56,11 +56,11 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
     user = cur.fetchone()
-    text = f'''🏠 Главное меню
+    text = f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
-📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
-{user[3] if user[3] else "🚫 Нет активной подписки"}
+📊 Мін - Макс спред: {user[4] if user[4] else "сперди не налаштовані"}
+{user[3] if user[3] else "🚫 Немає активної підписки"}
 💰 Баланс: {user[2]} USDT'''
     if text != str(callback_query.message.text):
         await callback_query.message.edit_text(text,reply_markup=btn.as_markup())

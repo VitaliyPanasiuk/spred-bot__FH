@@ -44,11 +44,11 @@ async def user_start(message: Message):
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
         print(user)
-        await bot.send_message(user_id,f'''🏠 Главное меню
+        await bot.send_message(user_id,f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
-📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
-{user[3] if user[3] else "🚫 Нет активной подписки"}
+📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
+{user[3] if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''',reply_markup=btn.as_markup())
     else:
         await db_update.register_user(user_id,user_name)
@@ -61,11 +61,11 @@ async def user_start(message: Message):
         cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
         spreads_on = cur.fetchone()
         btn = main_page(spreads_on[0])
-        await bot.send_message(user_id,f'''🏠 Главное меню
+        await bot.send_message(user_id,f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
-📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
-{user[3] if user[3] else "🚫 Нет активной подписки"}
+📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
+{user[3] if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''',reply_markup=btn.as_markup())
 
 
@@ -130,22 +130,22 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     trial_version_activated = cur.fetchone()
     message = f'''💥 Подписка
 
-{trial_version_activated[0] if trial_version_activated and trial_version_activated[0] else "🚫 Нет активной подписки"}
-❇️ Скидка: {user[1]} %
+{trial_version_activated[0] if trial_version_activated and trial_version_activated[0] else "🚫 Відсутня активна підписка"}
+❇️ Знижка: {user[1]} %
 
-👉🏻 Преимущества подписки:
-1️⃣ Вам будут доступны проценты прибыли на всех видах спредов более 0.35%'''
+👉🏻 Переваги підписки:
+1️⃣ Вам будут доступні відсотки прибутку на всіх видах спредів більш 0.35%'''
     await callback_query.message.edit_text(message,reply_markup=btn.as_markup(),parse_mode="HTML")
         
         
 @user_router.callback_query(lambda c: c.data == 'activate promo')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
-    messages = '''💥 Активировать промокод
+    messages = '''💥 Активувати промокод
 
-Промокод должен быть длиной в 20 символов.
+Промокод повинен бути довжиною більш ніж 20 символів.
 
-Введите промокод в чат'''
+Введіть промокод в чат'''
     await state.update_data(id=callback_query.message.message_id)
     await callback_query.message.edit_text(messages)
     await state.set_state(promo_state.name)
@@ -173,11 +173,11 @@ async def typeOfOrder(message: types.Message, state: FSMContext):
         spreads_on = cur.fetchone()
         btn = main_page(spreads_on[0])
         data = await state.get_data()
-        await bot.edit_message_text(chat_id = message.chat.id ,message_id=data['id'], text = f'''🏠 Главное меню
+        await bot.edit_message_text(chat_id = message.chat.id ,message_id=data['id'], text = f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
-📊 Мин - Макс спред: {user[4] if user[4] else "сперды не настроены"}
-{user[3] if user[3] else "🚫 Нет активной подписки"}
+📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
+{user[3] if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''' ,reply_markup=btn.as_markup(),parse_mode="HTML")
         await asyncio.sleep(2.5)
         await bot.delete_message(chat_id = message.chat.id ,message_id = message.message_id + 1 )
