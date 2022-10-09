@@ -39,22 +39,23 @@ async def user_start(message: Message):
         btn = main_page(spreads_on[0])
         cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
-                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
+                                LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true
+                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id and ms.spread_direction = isd.spread_direction
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
-        print(user)
         await bot.send_message(user_id,f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
 📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
-{user[3] if user[3] else "🚫 Відсутня активна підписка"}
+{user[3].strftime("%m/%d/%Y, %H:%M") if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''',reply_markup=btn.as_markup())
     else:
         await db_update.register_user(user_id,user_name)
         cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
-                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
+                                LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true
+                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id and ms.spread_direction = isd.spread_direction
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
@@ -65,7 +66,7 @@ async def user_start(message: Message):
 
 🎫 Ваш ID: {user_id}
 📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
-{user[3] if user[3] else "🚫 Відсутня активна підписка"}
+{user[3].strftime("%m/%d/%Y, %H:%M") if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''',reply_markup=btn.as_markup())
 
 
@@ -128,9 +129,9 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     print(user)
     cur.execute("SELECT valid_to from user_subscriptions where user_id = %s",(user[0],) )
     trial_version_activated = cur.fetchone()
-    message = f'''💥 Подписка
+    message = f'''💥 Підписка
 
-{trial_version_activated[0] if trial_version_activated and trial_version_activated[0] else "🚫 Відсутня активна підписка"}
+{trial_version_activated[3].strftime("%m/%d/%Y, %H:%M") if trial_version_activated and trial_version_activated[0] else "🚫 Відсутня активна підписка"}
 ❇️ Знижка: {user[1]} %
 
 👉🏻 Переваги підписки:
@@ -165,7 +166,8 @@ async def typeOfOrder(message: types.Message, state: FSMContext):
         await bot.send_message(user_id,messages)
         cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
-                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
+                                LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true
+                                LEFT JOIN minimal_spread ms ON ms.user_id  = users.id and ms.spread_direction = isd.spread_direction
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
@@ -177,7 +179,7 @@ async def typeOfOrder(message: types.Message, state: FSMContext):
 
 🎫 Ваш ID: {user_id}
 📊 Мін - Макс спред: {user[4] if user[4] else "спреди не налаштовані"}
-{user[3] if user[3] else "🚫 Відсутня активна підписка"}
+{user[3].strftime("%m/%d/%Y, %H:%M") if user[3] else "🚫 Відсутня активна підписка"}
 💰 Баланс: {user[2]} USDT''' ,reply_markup=btn.as_markup(),parse_mode="HTML")
         await asyncio.sleep(2.5)
         await bot.delete_message(chat_id = message.chat.id ,message_id = message.message_id + 1 )

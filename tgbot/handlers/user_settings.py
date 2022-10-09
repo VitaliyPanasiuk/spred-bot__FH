@@ -37,7 +37,12 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
 @user_settings_router.callback_query(lambda c: c.data == 'choose directions')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
-    btn = choose_directions_btn()
+    cur.execute(''' SELECT is_on 
+                        FROM is_direction_on_for_user 
+                        LEFT JOIN users ON  users.id = is_direction_on_for_user.user_id
+                        WHERE telegram_id = %s ORDER BY spread_direction''',(str(user_id),))
+    is_on = cur.fetchall()
+    btn = choose_directions_btn(is_on)
     await callback_query.message.edit_text('Оберіть напрямок',reply_markup=btn.as_markup(),parse_mode="HTML")
     
 @user_settings_router.callback_query(lambda c: c.data == 'settings directions')
@@ -60,7 +65,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 1''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -71,7 +76,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -86,7 +91,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 2''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -97,7 +102,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -112,7 +117,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 3''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -123,7 +128,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -138,7 +143,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 4''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -149,7 +154,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -164,7 +169,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 5''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -175,7 +180,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -190,7 +195,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 6''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -201,7 +206,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -216,7 +221,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 7''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -227,7 +232,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -242,7 +247,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = 8''',(str(user_id),))
     user = cur.fetchone()
     print(user[0])
     btn = home_btn()
@@ -253,7 +258,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа
@@ -266,21 +271,36 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
 async def typeOfOrder(message: types.Message, state: min_spread_state):
     user_id = message.from_user.id
     text = message.text
-    if text.isdigit():
+    if type(text) == int or float:
         await state.update_data(num=text)
         data = await state.get_data()
         cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
         user = cur.fetchone()
         cur.execute("SELECT id FROM spread_directions WHERE name = %s",(data['direction'],))
         direction = cur.fetchone()
-        cur.execute("UPDATE minimal_spread SET spread_direction = %s WHERE user_id = %s",(direction[0],user[0]))
-        cur.execute("UPDATE minimal_spread SET spread_value = %s WHERE user_id = %s",(data['num'],user[0]))
+        if data['direction'] == 'Найпростіші (Найліквідніші) зв’язки':
+            sp_num = 1
+        if data['direction'] == 'Міжбіржові':
+            sp_num = 2
+        if data['direction'] == 'Готівка':
+            sp_num = 3
+        if data['direction'] == 'Binance':
+            sp_num = 4
+        if data['direction'] == 'OKX':
+            sp_num = 5
+        if data['direction'] == 'ByBit':
+            sp_num = 6
+        if data['direction'] == 'Wise':
+            sp_num = 7
+        if data['direction'] == 'LocalBitcoins':
+            sp_num = 8
+        cur.execute("UPDATE minimal_spread SET spread_value = %s WHERE user_id = %s and spread_direction = %s",(data['num'],user[0],sp_num))
         base.commit()
         
         cur.execute(''' SELECT ms.spread_value
                             FROM users
                                 LEFT JOIN minimal_spread ms ON ms.user_id  = users.id
-                        WHERE telegram_id = %s''',(str(user_id),))
+                        WHERE telegram_id = %s and spread_direction = %s''',(str(user_id),sp_num))
         user = cur.fetchone()
         btn = home_btn()
         await bot.edit_message_text(chat_id = message.chat.id ,message_id=data['id'], text = f'''📏 Налаштування мінімального спреду:
@@ -290,7 +310,7 @@ async def typeOfOrder(message: types.Message, state: min_spread_state):
     значення котріх буде вище або
     дорівнювати вашому мінімальному спреду.
 
-    Поточний мінімальний спред: {user[0] if user[0] else "сперди не налаштовані"}
+    Поточний мінімальний спред: {user[0] if user[0] else "спреди не налаштовані"}
 
     ❗️ Спред може бути від 0.2% до 100%
     ❗️ Тільки числа

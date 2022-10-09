@@ -16,9 +16,34 @@ async def register_user(user_id,user_name):
     user = cur.fetchone()
     i = 1
     while i < 9:
-        cur.execute("INSERT INTO user_directions_exchanges (user_id,spread_direction) VALUES (%s,%s)",(user[0],i))
+        cur.execute("INSERT INTO user_directions_exchanges (user_id,spread_direction,exchange_chosen) VALUES (%s,%s,%s)",(user[0],i,[]))
         i += 1
-    cur.execute("INSERT INTO minimal_spread (user_id) VALUES (%s)",(user[0],))
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO user_directions_banks (user_id,spread_direction,bank_chosen) VALUES (%s,%s,%s)",(user[0],i,[]))
+        i += 1
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO user_directions_cryptocurrency (user_id,spread_direction,cryptocurrency_chosen) VALUES (%s,%s,%s)",(user[0],i,[]))
+        i += 1
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO user_directions_fiat_currency (user_id,spread_direction,fiat_currency_chosen) VALUES (%s,%s,%s)",(user[0],i,[]))
+        i += 1
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO user_directions_operation_options (user_id,spread_direction,operation_options_chosen) VALUES (%s,%s,%s)",(user[0],i,[]))
+        i += 1
+
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO minimal_spread (user_id,spread_direction) VALUES (%s,%s)",(user[0],i))
+        i += 1
+    i = 1
+    while i < 9:
+        cur.execute("INSERT INTO is_direction_on_for_user (user_id,spread_direction) VALUES (%s,%s)",(user[0],i))
+        i += 1
+    
     
     
     base.commit()

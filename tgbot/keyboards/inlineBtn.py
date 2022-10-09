@@ -22,11 +22,7 @@ def main_page(spreads_on):
         callback_data='two hours'
     ))
     example.row(types.InlineKeyboardButton(
-        text='📊 Завантажити спреди',
-        callback_data='download spread'
-    ))
-    example.row(types.InlineKeyboardButton(
-        text=f'ℹ️ Спреди увімкнено {"🟢" if spreads_on else "🔴"}',
+        text=f'ℹ️ Спреди  {"увімкнено 🟢" if spreads_on else "вимкнено 🔴"}',
         callback_data='change spread'
     ))
     example.row(types.InlineKeyboardButton(
@@ -88,12 +84,12 @@ def user_settings_btn():
         callback_data='choose directions'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Мінімальний спред',
-        callback_data='minimal spread'
-    ))
-    example.row(types.InlineKeyboardButton(
         text='Налаштувати напрямки',
         callback_data='settings directions'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Мінімальний спред',
+        callback_data='minimal spread'
     ))
     example.row(types.InlineKeyboardButton(
         text='Головне меню',
@@ -102,39 +98,47 @@ def user_settings_btn():
     
     return example
 
-def choose_directions_btn():
+def choose_directions_btn(arr):
     example = InlineKeyboardBuilder()
+    print(arr)
+    print(arr[0])
+    print(arr[0][0])
+
     example.row(types.InlineKeyboardButton(
-        text='Найпростіші (Найліквідніші) зв’язки',
+        text=f'Найпростіші (Найліквідніші) зв’язки {"🟢" if arr[0][0] == True else "🔴"}',
         callback_data='simple direction'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Міжбіржові',
+        text=f'Міжбіржові {"🟢" if arr[1][0] == True else "🔴"}',
         callback_data='interexchange'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Готівка',
+        text=f'Готівка {"🟢" if arr[2][0] == True else "🔴"}',
         callback_data='cash'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Binance',
+        text=f'Binance {"🟢" if arr[3][0] == True else "🔴"}',
         callback_data='binance'
     ))
     example.row(types.InlineKeyboardButton(
-        text='OKX',
+        text=f'OKX {"🟢" if arr[4][0] == True else "🔴"}',
         callback_data='okx'
     ))
     example.row(types.InlineKeyboardButton(
-        text='ByBit',
+        text=f'ByBit {"🟢" if arr[5][0] == True else "🔴"}',
         callback_data='bybit'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Wise',
+        text=f'Wise {"🟢" if arr[6][0] == True else "🔴"}',
         callback_data='wise'
     ))
     example.row(types.InlineKeyboardButton(
-        text='LocalBitcoins',
+        text=f'LocalBitcoins {"🟢" if arr[7][0] == True else "🔴"}',
         callback_data='localbitcoins'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Повернутися назад',
+        callback_data='back to settings'
     ))
     
     return example
@@ -172,6 +176,10 @@ def settings_directions_btn():
     example.row(types.InlineKeyboardButton(
         text='LocalBitcoins',
         callback_data='localbitcoins settings'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Повернутися назад',
+        callback_data='back to settings'
     ))
     
     return example
@@ -240,11 +248,11 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
-            callback_data='settings privatbank' +direction
+            callback_data='settings privatbank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'МоноБанк {"🟢" if settings and settings[1] and "МоноБанк" in settings[1] else "🔴"}',
-            callback_data='settings monobank' +direction
+            callback_data='settings monobank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'СпортБанк {"🟢" if settings and settings[1] and "СпортБанк" in settings[1] else "🔴"}',
@@ -278,11 +286,11 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
-            callback_data='settings privatbank' +direction
+            callback_data='settings privatbank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'МоноБанк {"🟢" if settings and settings[1] and "МоноБанк" in settings[1] else "🔴"}',
-            callback_data='settings monobank' +direction
+            callback_data='settings monobank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'СпортБанк {"🟢" if settings and settings[1] and "СпортБанк" in settings[1] else "🔴"}',
@@ -312,15 +320,15 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'Купуємо крипту, міняємо на іншу, продаємо як мейкер {"🟢" if settings and settings[3] and "Купуємо крипту, міняємо на іншу, продаємо як мейкер " in settings[3] else "🔴"}',
-            callback_data='settings buy-exchange crypto' +direction
+            callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
-            callback_data='settings privatbank' +direction
+            callback_data='settings privatbank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'МоноБанк {"🟢" if settings and settings[1] and "МоноБанк" in settings[1] else "🔴"}',
-            callback_data='settings monobank' +direction
+            callback_data='settings monobank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'СпортБанк {"🟢" if settings and settings[1] and "СпортБанк" in settings[1] else "🔴"}',
@@ -382,15 +390,15 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'Купуємо крипту, міняємо на іншу, продаємо як мейкер {"🟢" if settings and settings[3] and "Купуємо крипту, міняємо на іншу, продаємо як мейкер" in settings[3] else "🔴"}',
-            callback_data='settings buy-exchange crypto' +direction
+            callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
-            callback_data='settings privatbank' +direction
+            callback_data='settings privatbank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'МоноБанк {"🟢" if settings and settings[1] and "МоноБанк" in settings[1] else "🔴"}',
-            callback_data='settings monobank' +direction
+            callback_data='settings monobank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'СпортБанк {"🟢" if settings and settings[1] and "СпортБанк" in settings[1] else "🔴"}',
@@ -466,7 +474,7 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'Купуємо крипту, конвертуємо на іншу та продаємо (одна платіжна система) {"🟢" if settings and settings[3] and "Купуємо крипту, конвертуємо на іншу та продаємо (одна платіжна система)" in settings[3] else "🔴"}',
-            callback_data='settings buy-exchange crypto' +direction
+            callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'USDT {"🟢" if settings and settings[2] and "BTC" in settings[2] else "🔴"}',
@@ -520,11 +528,11 @@ def settings_simple_direction(user_id,direction):
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
-            callback_data='settings privatbank' +direction
+            callback_data='settings privatbank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'МоноБанк {"🟢" if settings and settings[1] and "МоноБанк" in settings[1] else "🔴"}',
-            callback_data='settings monobank' +direction
+            callback_data='settings monobank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'СпортБанк {"🟢" if settings and settings[1] and "СпортБанк" in settings[1] else "🔴"}',
@@ -576,7 +584,11 @@ def settings_simple_direction(user_id,direction):
         ))
     
     example.row(types.InlineKeyboardButton(
-        text='Главное меню',
+        text='Повернутися назад',
+        callback_data='back to settings direction'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Головне меню',
         callback_data='main page'
     ))
     return example
@@ -616,7 +628,11 @@ def min_spread_settings_btn():
         callback_data='localbitcoins spread'
     ))
     example.row(types.InlineKeyboardButton(
-        text='Главное меню',
+        text='Повернутися назад',
+        callback_data='back to settings'
+    ))
+    example.row(types.InlineKeyboardButton(
+        text='Головне меню',
         callback_data='main page'
     ))
     
