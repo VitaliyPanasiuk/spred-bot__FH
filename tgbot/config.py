@@ -45,9 +45,9 @@ def load_config(path: str = None):
         ),
         db=DbConfig(
             host='localhost',
-            password='spread_bot_pass',
-            user='spread_bot',
-            database='spread_bot',
+            password='27052004',
+            user='postgres',
+            database='postgres',
             db_uri = ''
         ),
         misc=Miscellaneous()

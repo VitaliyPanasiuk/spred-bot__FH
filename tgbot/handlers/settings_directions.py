@@ -3014,7 +3014,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'wise settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings gbr wise settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings gbp wise settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -3031,8 +3031,8 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute("SELECT fiat_currency_chosen FROM user_directions_fiat_currency WHERE user_id = %s and spread_direction = 7",(user[0],))
     fiat_currency_chosen = cur.fetchone()
     
-    if 'GBR'not in fiat_currency_chosen[0]:
-        cur.execute('''UPDATE user_directions_fiat_currency SET fiat_currency_chosen = fiat_currency_chosen || ARRAY['GBR']
+    if 'GBP'not in fiat_currency_chosen[0]:
+        cur.execute('''UPDATE user_directions_fiat_currency SET fiat_currency_chosen = fiat_currency_chosen || ARRAY['GBP']
             WHERE 
             user_id = %s and spread_direction = 7 AND
                 EXISTS (
@@ -3041,7 +3041,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
             ''',(user[0],user[0]))
         base.commit()
     else:
-        cur.execute('''UPDATE user_directions_fiat_currency SET fiat_currency_chosen = array_remove(fiat_currency_chosen, 'GBR')
+        cur.execute('''UPDATE user_directions_fiat_currency SET fiat_currency_chosen = array_remove(fiat_currency_chosen, 'GBP')
             WHERE 
                 user_id = %s and spread_direction = 7 AND
                 EXISTS (

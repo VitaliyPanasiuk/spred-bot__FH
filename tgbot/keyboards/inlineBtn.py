@@ -477,7 +477,7 @@ def settings_simple_direction(user_id,direction):
             callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'USDT {"🟢" if settings and settings[2] and "BTC" in settings[2] else "🔴"}',
+            text=f'USDT {"🟢" if settings and settings[2] and "USDT" in settings[2] else "🔴"}',
             callback_data='settings usdt ' +direction
         ))
         example.row(types.InlineKeyboardButton(
@@ -485,15 +485,15 @@ def settings_simple_direction(user_id,direction):
             callback_data='settings btc ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'ETH {"🟢" if settings and settings[2] and "BTC" in settings[2] else "🔴"}',
+            text=f'ETH {"🟢" if settings and settings[2] and "ETH" in settings[2] else "🔴"}',
             callback_data='settings eth ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'BNB {"🟢" if settings and settings[2] and "BTC" in settings[2] else "🔴"}',
+            text=f'BNB {"🟢" if settings and settings[2] and "BNB" in settings[2] else "🔴"}',
             callback_data='settings bnb ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'BUSD {"🟢" if settings and settings[2] and "BTC" in settings[2] else "🔴"}',
+            text=f'BUSD {"🟢" if settings and settings[2] and "BUSD" in settings[2] else "🔴"}',
             callback_data='settings busd ' +direction
         ))
         example.row(types.InlineKeyboardButton(
