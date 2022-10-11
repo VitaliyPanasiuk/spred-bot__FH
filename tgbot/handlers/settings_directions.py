@@ -2327,7 +2327,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
 # direction --> bybit settings     
-@settings_directions_router.callback_query(lambda c: c.data ==  'buy-sell crypto bybit settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-sell crypto bybit settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))

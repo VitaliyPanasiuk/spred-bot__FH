@@ -113,7 +113,7 @@ create table if not exists minimal_spread
     spread_direction integer
         constraint minimal_spread_spread_directions_id_fk
             references spread_directions,
-    spread_value     numeric
+    spread_value     numeric default 0.2
 );
 
 create table if not exists is_direction_on_for_user
