@@ -34,9 +34,9 @@ async def user_start(message: Message):
     auf = await auf_status(user_id)
     
     if auf:
-        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        cur.execute("SELECT spreads_on, trial_version_activated from users where telegram_id = %s",(str(user_id),) )
         spreads_on = cur.fetchone()
-        btn = main_page(spreads_on[0])
+        btn = main_page(spreads_on)
         cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
                                 LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true
@@ -59,9 +59,9 @@ async def user_start(message: Message):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
-        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        cur.execute("SELECT spreads_on,trial_version_activated from users where telegram_id = %s",(str(user_id),) )
         spreads_on = cur.fetchone()
-        btn = main_page(spreads_on[0])
+        btn = main_page(spreads_on)
         await bot.send_message(user_id,f'''🏠 Головне меню
 
 🎫 Ваш ID: {user_id}
@@ -75,9 +75,9 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("UPDATE users SET spreads_on = NOT spreads_on WHERE telegram_id = %s", (str(user_id),))
     base.commit()
-    cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+    cur.execute("SELECT spreads_on,trial_version_activated from users where telegram_id = %s",(str(user_id),) )
     spreads_on = cur.fetchone()
-    btn = main_page(spreads_on[0])
+    btn = main_page(spreads_on)
     await callback_query.message.edit_reply_markup(reply_markup=btn.as_markup())
     
     
@@ -171,9 +171,9 @@ async def typeOfOrder(message: types.Message, state: FSMContext):
                                 LEFT JOIN user_subscriptions us on us.user_id = users.id
                         WHERE telegram_id = %s''',(str(user_id),))
         user = cur.fetchone()
-        cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+        cur.execute("SELECT spreads_on,trial_version_activated from users where telegram_id = %s",(str(user_id),) )
         spreads_on = cur.fetchone()
-        btn = main_page(spreads_on[0])
+        btn = main_page(spreads_on)
         data = await state.get_data()
         await bot.edit_message_text(chat_id = message.chat.id ,message_id=data['id'], text = f'''🏠 Головне меню
 

@@ -28,9 +28,9 @@ cur = base.cursor()
 @system_callback_router.callback_query(lambda c: c.data == 'main page')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
-    cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+    cur.execute("SELECT spreads_on,trial_version_activated from users where telegram_id = %s",(str(user_id),) )
     spreads_on = cur.fetchone()
-    btn = main_page(spreads_on[0])
+    btn = main_page(spreads_on)
     cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
                                 LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true
@@ -48,9 +48,9 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
 @system_callback_router.callback_query(lambda c: c.data == 'reload menu')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
-    cur.execute("SELECT spreads_on from users where telegram_id = %s",(str(user_id),) )
+    cur.execute("SELECT spreads_on,trial_version_activated from users where telegram_id = %s",(str(user_id),) )
     spreads_on = cur.fetchone()
-    btn = main_page(spreads_on[0])
+    btn = main_page(spreads_on)
     cur.execute(''' SELECT users.telegram_id,users.spreads_on, users.balance_usdt, us.valid_to, ms.spread_value
                             FROM users
                                 LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id and isd.is_on = true

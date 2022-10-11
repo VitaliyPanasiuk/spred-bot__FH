@@ -65,7 +65,6 @@ async def parse_binance1(rang,settings,min_spread,sheet):
         if i == []:
             result.remove(i)
     
-        
     for row in range(len(result[0])):
         if row != 0:
             flagbank = True
@@ -76,13 +75,18 @@ async def parse_binance1(rang,settings,min_spread,sheet):
             if flagbank:
                 for line in range(len(result)):
                     if line != 0:
-                        if result[line][row].isdigit():
-                            num = result[line][row]/1000
-                            if result[line][0] in settings[2] and num > min_spread[0]:
-                                if not flagtext2:
-                                    message += '\n{result[0][0]}\n'
-                                    flagtext2 = True
-                                message += f'{result[0][row]}  + {result[line][0]} + {num}%\n'
+                        try:
+                            num = float(result[line][row].replace(',','.'))
+                            if type(num) == int or type(num) == float:
+                                if result[line][row]:
+                                    num = num/1000
+                                    if result[line][0] in settings[2] and num > min_spread[0]:
+                                        if not flagtext2:
+                                            message += f'\n{result[0][0]}\n'
+                                            flagtext2 = True
+                                        message += f'{result[0][row]}  + {result[line][0]} + {num}%\n'
+                        except:
+                            pass
     return message
 
 async def parse_binance2(rang,settings,min_spread,sheet):
@@ -109,17 +113,22 @@ async def parse_binance2(rang,settings,min_spread,sheet):
             if flagcr:
                 for line in range(len(result)):
                     if line != 0:
-                        if result[line][row].isdigit():
-                            num = result[line][row]/1000
-                            bank = result[line][0].replace(' ','').split('→')
-                            for b in bank:
-                                if b not in settings[1]:
-                                    flagbank = False
-                            if flagbank and num > min_spread[0]:
-                                if not flagtext2:
-                                    message += '\n{result[0][0]}\n'
-                                    flagtext2 = True
-                                message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                        try:
+                            num = float(result[line][row].replace(',','.'))
+                            if type(num) == int or type(num) == float:
+                                num = num/1000
+                                bank = result[line][0].replace(' ','').split('→')
+                                for b in bank:
+                                    if b not in settings[1]:
+                                        flagbank = False
+                                if flagbank and num > min_spread[0]:
+                                    if not flagtext2:
+                                        message += f'\n{result[0][0]}\n'
+                                        flagtext2 = True
+                                    message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                        except:
+                            pass
+                        
     return message
 
 async def parse_binance3(rang,settings,min_spread,sheet):
@@ -146,28 +155,34 @@ async def parse_binance3(rang,settings,min_spread,sheet):
             if flagcr:
                 for line in range(len(result)):
                     if line != 0:
-                        if result[line][row].isdigit():
-                            num = result[line][row]/1000
-                            # bank = result[line][0].replace(' ','').split('→')
-                            # for b in bank:
-                            if result[line][0] not in settings[2]:
-                                flagbank = False
-                            if flagbank and num > min_spread[0]:
-                                if not flagtext2:
-                                    message += '\n{result[0][0]}\n'
-                                    flagtext2 = True
-                                message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                        try:
+                            num = float(result[line][row].replace(',','.'))
+                            if type(num) == int or type(num) == float:
+                                num = num.replace(',','.')/1000
+                                # bank = result[line][0].replace(' ','').split('→')
+                                # for b in bank:
+                                if result[line][0] not in settings[2]:
+                                    flagbank = False
+                                if flagbank and num > min_spread[0]:
+                                    if not flagtext2:
+                                        message += f'\n{result[0][0]}\n'
+                                        flagtext2 = True
+                                    message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                        except:
+                            pass
     return message
     
 async def mailing():
     while True:
+        print('steart mailing')
         base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
         cur = base.cursor() 
         cur.execute("SELECT * FROM users WHERE spreads_on = true")
         users = cur.fetchall()
-        
+        print(users)
         for user in users:
-            try:
+                print(user)
+            # try:
                 message = ''
                 cur.execute(''' SELECT spread_directions.name
                                     FROM is_direction_on_for_user
@@ -175,9 +190,9 @@ async def mailing():
                                     LEFT JOIN users ON users.id = is_direction_on_for_user.user_id
                                         WHERE users.telegram_id = %s and is_direction_on_for_user.is_on = true''', (str(user[1]),))
                 spread_directions = cur.fetchall()
-
+                print(spread_directions)
                 for spread_direction in spread_directions:
-                
+                    print(spread_direction)
                     cur.execute(''' SELECT user_directions_exchanges.exchange_chosen, ub.bank_chosen, us.cryptocurrency_chosen, uo.operation_options_chosen, uf.fiat_currency_chosen
                                         FROM user_directions_exchanges
                                             LEFT JOIN user_directions_banks ub ON ub.user_id  = user_directions_exchanges.user_id and ub.spread_direction = user_directions_exchanges.spread_direction
@@ -194,10 +209,10 @@ async def mailing():
                                         FROM users
                                             LEFT JOIN is_direction_on_for_user isd on isd.user_id = users.id
                                             LEFT JOIN minimal_spread ms ON ms.user_id  = users.id and ms.spread_direction = isd.spread_direction
-                                    WHERE telegram_id = %s''',(str(user[1]),))
-                    min_spread = cur.fetchone()
+                                    WHERE telegram_id = %s ORDER BY ms.spread_direction''',(str(user[1]),))
+                    min_spread = cur.fetchall()
                     
-                    if spread_direction == 'Найпростіші (Найліквідніші) зв’язки':
+                    if spread_direction[0] == 'Найпростіші (Найліквідніші) зв’язки':
                         if settings[0] and 'Binance' in settings[0]:
                             flagtext2 = False
                             
@@ -227,7 +242,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[0][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -260,7 +275,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[0][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -299,7 +314,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[0][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -370,7 +385,7 @@ async def mailing():
                                                 if flag == True:
                                                     num = result[line+1][a].replace('%','').replace(',','.')
                                                     
-                                                    if float(num) > 0.5:
+                                                    if float(num) > min_spread[0][0]:
                                                         
                                                         if flag:
                                                             if not flagtext2:
@@ -402,7 +417,7 @@ async def mailing():
                                                 if flag == True:
                                                     num = result[line+1][a].replace('%','').replace(',','.')
                                                     
-                                                    if float(num) > 0.5:
+                                                    if float(num) > min_spread[0][0]:
                                                         
                                                         if flag:
                                                             if not flagtext2:
@@ -412,7 +427,7 @@ async def mailing():
                                                                 message += f'{result[0][0]}\n'
                                                                 flagtext = True
                                                             message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
-                    if spread_direction == 'Міжбіржові':
+                    if spread_direction[0] == 'Міжбіржові':
                         if settings[0] and settings[0] and 'Binance' in settings[0] and 'ByBit' in settings[0]:
                             flagtext2 = False
                             
@@ -443,7 +458,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -476,7 +491,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -508,7 +523,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -540,7 +555,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -572,7 +587,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -604,7 +619,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -645,7 +660,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -678,7 +693,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -710,7 +725,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -742,7 +757,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -774,7 +789,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -806,7 +821,7 @@ async def mailing():
                                             if flag == True:
                                                 num = result[line+1][a].replace('%','').replace(',','.')
                                                 
-                                                if float(num) > min_spread[0]:
+                                                if float(num) > min_spread[1][0]:
                                                     
                                                     if flag:
                                                         if not flagtext2:
@@ -816,7 +831,7 @@ async def mailing():
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
                                                         message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
-                    if spread_direction == 'Готівка':
+                    if spread_direction[0] == 'Готівка':
                         if settings[0] and 'Binance' in settings[0]:
                                 flagtext2 = False
                                 
@@ -839,7 +854,7 @@ async def mailing():
                                         for line in range(len(result)):
                                             if line != 0:
                                                 num = result[line][row]/1000
-                                                if result[line][0] in settings[1] and num > min_spread[0]:
+                                                if result[line][0] in settings[1] and num > min_spread[2][0]:
                                                     if not flagtext2:
                                                         message += '\Binance профіт\n'
                                                         flagtext2 = True
@@ -866,80 +881,79 @@ async def mailing():
                                         for line in range(len(result)):
                                             if line != 0:
                                                 num = result[line][row]/1000
-                                                if result[line][0] in settings[1] and num > min_spread[0]:
+                                                if result[line][0] in settings[1] and num > min_spread[2][0]:
                                                     if not flagtext2:
                                                         message += '\ByBit профіт\n'
                                                         flagtext2 = True
                                                     message += f'{result[line][0]}+ {result[0][row]}  +{num}%\n'                        
-                    if spread_direction == 'Binance':
+                    if spread_direction[0] == 'Binance':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[3]
                         if 'Купуємо крипту, продаємо її' in settings[3]:
                             ranges = ['A69:J77','A58:K66','A80:J88','A91:J99','A102:J110','A113:J121','A124:J132','A135:J143','A146:J154','A157:J165','A168:J176']
                             for i in ranges:
-                                mess = await parse_binance1(i,settings,min_spread)
+                                mess = await parse_binance1(i,settings,min_spread[3])
                                 message += mess
                         if 'Купуємо крипту, міняємо на іншу, продаємо як мейкер' in settings[3]:
                             ranges = ['A192:F292','A295:F395','A398:F498','A501:F601','A604:F704','A707:F807']
                             for i in ranges:
-                                mess = await parse_binance2(i,settings,min_spread)
+                                mess = await parse_binance2(i,settings,min_spread[3])
                                 message += mess
-                    if spread_direction == 'OKX':
+                    if spread_direction[0] == 'OKX':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[7]
                         if 'Купуємо крипту, продаємо її' in settings[3]:
                             ranges = ['A22:F26','A28:E32','A34:E38','A40:E44','A46:E50','A52:E55']
                             for i in ranges:
-                                mess = await parse_binance1(i,settings,min_spread)
+                                mess = await parse_binance1(i,settings,min_spread[4],sh.title)
                                 message += mess
                         if 'Купуємо крипту, міняємо на іншу, продаємо як мейкер' in settings[3]:
                             ranges = ['A60:C84','E60:G84','I60:K84']
                             for i in ranges:
-                                mess = await parse_binance2(i,settings,min_spread)
+                                mess = await parse_binance2(i,settings,min_spread[4],sh.title)
                                 message += mess
-                    if spread_direction == 'ByBit':
+                    if spread_direction[0] == 'ByBit':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[8]
                         if 'Купуємо крипту, продаємо її' in settings[3]:
                             ranges = ['A25:F29','A31:E35','A37:E41','A43:E47','A49:E53','A55:E59']
                             for i in ranges:
-                                mess = await parse_binance1(i,settings,min_spread,sh.title)
+                                mess = await parse_binance1(i,settings,min_spread[5],sh.title)
                                 message += mess
                         if 'Купуємо крипту, міняємо на іншу, продаємо як мейкер' in settings[3]:
                             ranges = ['A63:C87','E63:G87','I63:K87']
                             for i in ranges:
-                                mess = await parse_binance2(i,settings,min_spread,sh.title)
+                                mess = await parse_binance2(i,settings,min_spread[5],sh.title)
                                 message += mess
-                    if spread_direction == 'Wise':
+                    if spread_direction[0] == 'Wise':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[9]
                         if 'Купуємо крипту та продаємо (одна платіжна система)' in settings[9]:
                             ranges = ['A20:F25']
                             for i in ranges:
-                                mess = await parse_binance3(i,settings,min_spread,sh.title)
+                                mess = await parse_binance3(i,settings,min_spread[6],sh.title)
                                 message += mess
                         if 'Купуємо крипту, конвертуємо на іншу та продаємо (одна платіжна система)' in settings[3]:
                             ranges = ['A30:E35','A37:E42','A44:E49','A50:E56']
                             for i in ranges:
-                                mess = await parse_binance3(i,settings,min_spread,sh.title)
+                                mess = await parse_binance3(i,settings,min_spread[6],sh.title)
                                 message += mess
-                    if spread_direction == 'LocalBitcoins':
+                    if spread_direction[0] == 'LocalBitcoins':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[11]
                         ranges = ['A19:C29']
                         for i in ranges:
-                            mess = await parse_binance2(i,settings,min_spread,sh.title)
+                            mess = await parse_binance2(i,settings,min_spread[7],sh.title)
                             message += mess
-                
                 if message:
                     await bot2.send_message(user[1],message)  
-            except:
-                print('none data')
+            # except:
+            #     print('none data')
             
         await asyncio.sleep(45)                                      
 

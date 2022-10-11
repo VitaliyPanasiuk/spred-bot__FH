@@ -3,7 +3,7 @@ from aiogram import Bot, types
 from tgbot.config import load_config
 
 from tgbot.misc.functions import auf_status,get_settings_directions
-from tgbot.misc.messages import price
+from tgbot.misc.messages import price, spread
 
 import psycopg2
 from psycopg2 import sql
@@ -17,12 +17,14 @@ cur = base.cursor()
 
 def main_page(spreads_on):
     example = InlineKeyboardBuilder()
+    print(spreads_on)
+    if spreads_on[1] == False:
+        example.row(types.InlineKeyboardButton(
+            text='🔥 Використати дві години підписки 🔥',
+            callback_data='two hours'
+        ))
     example.row(types.InlineKeyboardButton(
-        text='🔥 Використати дві години підписки 🔥',
-        callback_data='two hours'
-    ))
-    example.row(types.InlineKeyboardButton(
-        text=f'ℹ️ Спреди  {"увімкнено 🟢" if spreads_on else "вимкнено 🔴"}',
+        text=f'ℹ️ Спреди  {"увімкнено 🟢" if spreads_on[0] else "вимкнено 🔴"}',
         callback_data='change spread'
     ))
     example.row(types.InlineKeyboardButton(
@@ -517,14 +519,14 @@ def settings_simple_direction(user_id,direction):
             callback_data='settings uah ' +direction
         ))
     elif direction == 'localbitcoins settings':
-        settings = get_settings_directions(user_id,'Wise')
+        settings = get_settings_directions(user_id,'LocalBitcoins')
         example.row(types.InlineKeyboardButton(
             text=f'Переводимо на BINANCE та продаємо на P2P {"🟢" if settings and settings[3] and "Переводимо на BINANCE та продаємо на P2P" in settings[3] else "🔴"}',
             callback_data='settings buy-sell crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'Переводимо на Bybit и продаємо на P2P {"🟢" if settings and settings[3] and "Переводимо на Bybit и продаємо на P2P" in settings[3] else "🔴"}',
-            callback_data='settings buy-exchange crypto' +direction
+            callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
             text=f'ПриватБанк {"🟢" if settings and settings[1] and "ПриватБанк" in settings[1] else "🔴"}',
