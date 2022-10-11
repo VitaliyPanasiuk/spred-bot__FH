@@ -64,7 +64,6 @@ async def parse_binance1(rang,settings,min_spread,sheet):
     for i in result:
         if i == []:
             result.remove(i)
-    
     for row in range(len(result[0])):
         if row != 0:
             flagbank = True
@@ -84,7 +83,7 @@ async def parse_binance1(rang,settings,min_spread,sheet):
                                         if not flagtext2:
                                             message += f'\n{result[0][0]}\n'
                                             flagtext2 = True
-                                        message += f'{result[0][row]}  + {result[line][0]} + {num}%\n'
+                                        message += f'{result[0][row]}  + {result[line][0]} + {round(num,2)}%\n'
                         except:
                             pass
     return message
@@ -125,7 +124,7 @@ async def parse_binance2(rang,settings,min_spread,sheet):
                                     if not flagtext2:
                                         message += f'\n{result[0][0]}\n'
                                         flagtext2 = True
-                                    message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                                    message += f'{result[line][0]} + {result[0][row]}  +  {round(num,2)}%\n'
                         except:
                             pass
                         
@@ -167,22 +166,20 @@ async def parse_binance3(rang,settings,min_spread,sheet):
                                     if not flagtext2:
                                         message += f'\n{result[0][0]}\n'
                                         flagtext2 = True
-                                    message += f'{result[line][0]} + {result[0][row]}  +  {num}%\n'
+                                    message += f'{result[line][0]} + {result[0][row]}  +  {round(num,2)}%\n'
                         except:
                             pass
     return message
     
 async def mailing():
     while True:
-        print('steart mailing')
+        print('start mailing')
         base = psycopg2.connect(dbname=config.db.database, user=config.db.user, password=config.db.password,host=config.db.host)
         cur = base.cursor() 
         cur.execute("SELECT * FROM users WHERE spreads_on = true")
         users = cur.fetchall()
-        print(users)
         for user in users:
-                print(user)
-            # try:
+            try:
                 message = ''
                 cur.execute(''' SELECT spread_directions.name
                                     FROM is_direction_on_for_user
@@ -190,9 +187,7 @@ async def mailing():
                                     LEFT JOIN users ON users.id = is_direction_on_for_user.user_id
                                         WHERE users.telegram_id = %s and is_direction_on_for_user.is_on = true''', (str(user[1]),))
                 spread_directions = cur.fetchall()
-                print(spread_directions)
                 for spread_direction in spread_directions:
-                    print(spread_direction)
                     cur.execute(''' SELECT user_directions_exchanges.exchange_chosen, ub.bank_chosen, us.cryptocurrency_chosen, uo.operation_options_chosen, uf.fiat_currency_chosen
                                         FROM user_directions_exchanges
                                             LEFT JOIN user_directions_banks ub ON ub.user_id  = user_directions_exchanges.user_id and ub.spread_direction = user_directions_exchanges.spread_direction
@@ -252,7 +247,7 @@ async def mailing():
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
                                                         
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                             
                             result = worksheet.get('A15:G41')
                             
@@ -284,7 +279,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                         if settings[0] and 'ByBit' in settings[0]:
                             flagtext2 = False
@@ -323,7 +318,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('A15:G41')
                             
@@ -355,7 +350,7 @@ async def mailing():
                                                             if not flagtext:
                                                                 message += f'{result[0][0]}\n'
                                                                 flagtext = True
-                                                            message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                            message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                             
                         if settings[0] and settings[0] and  'OKX' in settings[0]:
                             flagtext2 = False
@@ -395,7 +390,7 @@ async def mailing():
                                                                 message += f'{result[0][0]}\n'
                                                                 flagtext = True
                                                             
-                                                            message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                            message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                             
                             result = worksheet.get('A15:G41')
                             
@@ -426,7 +421,7 @@ async def mailing():
                                                             if not flagtext:
                                                                 message += f'{result[0][0]}\n'
                                                                 flagtext = True
-                                                            message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                            message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                     if spread_direction[0] == 'Міжбіржові':
                         if settings[0] and settings[0] and 'Binance' in settings[0] and 'ByBit' in settings[0]:
                             flagtext2 = False
@@ -468,7 +463,7 @@ async def mailing():
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
                                                         
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                             
                             result = worksheet.get('A11:E13')
                             
@@ -500,7 +495,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('A15:E17')
                             
@@ -532,7 +527,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('A19:E21')
                             
@@ -564,7 +559,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('A23:E25')
                             
@@ -596,7 +591,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('A27:E29')
                             
@@ -628,7 +623,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                         if settings[0] and 'Binance' in settings[0] and 'OKX' in settings[0]:
                             flagtext2 = False
@@ -670,7 +665,7 @@ async def mailing():
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
                                                         
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                             
                             result = worksheet.get('G11:K13')
                             
@@ -702,7 +697,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('G15:K17')
                             
@@ -734,7 +729,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('G19:K21')
                             
@@ -766,7 +761,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('G23:K25')
                             
@@ -798,7 +793,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                                                         
                             result = worksheet.get('G27:K29')
                             
@@ -830,7 +825,7 @@ async def mailing():
                                                         if not flagtext:
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
-                                                        message += f'{result[line][a]} {result[line+1][0]} +{num}%\n'
+                                                        message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
                     if spread_direction[0] == 'Готівка':
                         if settings[0] and 'Binance' in settings[0]:
                                 flagtext2 = False
@@ -858,7 +853,7 @@ async def mailing():
                                                     if not flagtext2:
                                                         message += '\Binance профіт\n'
                                                         flagtext2 = True
-                                                    message += f'{result[line][0]}+ {result[0][row]}  +{num}%\n'
+                                                    message += f'{result[line][0]}+ {result[0][row]}  +{round(num,2)}%\n'
                         if settings[0] and 'ByBit' in settings[0]:
                                 flagtext2 = False
                                 
@@ -885,7 +880,7 @@ async def mailing():
                                                     if not flagtext2:
                                                         message += '\ByBit профіт\n'
                                                         flagtext2 = True
-                                                    message += f'{result[line][0]}+ {result[0][row]}  +{num}%\n'                        
+                                                    message += f'{result[line][0]}+ {result[0][row]}  +{round(num,2)}%\n'                        
                     if spread_direction[0] == 'Binance':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
@@ -917,7 +912,7 @@ async def mailing():
                     if spread_direction[0] == 'ByBit':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
-                        sh = all_sheets[8]
+                        sh = all_sheets[10]
                         if 'Купуємо крипту, продаємо її' in settings[3]:
                             ranges = ['A25:F29','A31:E35','A37:E41','A43:E47','A49:E53','A55:E59']
                             for i in ranges:
@@ -928,10 +923,11 @@ async def mailing():
                             for i in ranges:
                                 mess = await parse_binance2(i,settings,min_spread[5],sh.title)
                                 message += mess
+                        print(message)
                     if spread_direction[0] == 'Wise':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
-                        sh = all_sheets[9]
+                        sh = all_sheets[11]
                         if 'Купуємо крипту та продаємо (одна платіжна система)' in settings[9]:
                             ranges = ['A20:F25']
                             for i in ranges:
@@ -945,15 +941,15 @@ async def mailing():
                     if spread_direction[0] == 'LocalBitcoins':
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
-                        sh = all_sheets[11]
+                        sh = all_sheets[13]
                         ranges = ['A19:C29']
                         for i in ranges:
                             mess = await parse_binance2(i,settings,min_spread[7],sh.title)
                             message += mess
                 if message:
                     await bot2.send_message(user[1],message)  
-            # except:
-            #     print('none data')
+            except:
+                print('none data')
             
         await asyncio.sleep(45)                                      
 
