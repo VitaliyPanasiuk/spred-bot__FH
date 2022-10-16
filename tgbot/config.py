@@ -38,16 +38,16 @@ def load_config(path: str = None):
 
     return Config(
         tg_bot=TgBot(
-            token='5632625717:AAG9K-ODI4emMk5JslSzGuQFr8pEjHlYeYc',
-            token2='5663714794:AAEDjs21ftXsJh_1wMIWfT83x_7N1rSKPr0',
+            token='5257942822:AAFqBBqGZs6UJZsF3fJ6fY-f8pCFQelxXRw',
+            token2='5411810705:AAFVmiB1l4KbCJ7zI_U-z_hULE9t2fyt9xQ',
             admin_ids=(),
             use_redis=False,
         ),
         db=DbConfig(
             host='localhost',
-            password='27052004',
+            password='2545',
             user='postgres',
-            database='postgres',
+            database='spredbot',
             db_uri = ''
         ),
         misc=Miscellaneous()

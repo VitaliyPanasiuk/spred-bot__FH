@@ -102,10 +102,6 @@ def user_settings_btn():
 
 def choose_directions_btn(arr):
     example = InlineKeyboardBuilder()
-    print(arr)
-    print(arr[0])
-    print(arr[0][0])
-
     example.row(types.InlineKeyboardButton(
         text=f'Найпростіші (Найліквідніші) зв’язки {"🟢" if arr[0][0] == True else "🔴"}',
         callback_data='simple direction'
