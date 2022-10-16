@@ -180,7 +180,6 @@ async def mailing():
         users = cur.fetchall()
         for user in users:
             try:
-                message = ''
                 cur.execute(''' SELECT spread_directions.name
                                     FROM is_direction_on_for_user
                                     LEFT JOIN spread_directions ON spread_directions.id = is_direction_on_for_user.spread_direction
@@ -208,6 +207,8 @@ async def mailing():
                     min_spread = cur.fetchall()
                     
                     if spread_direction[0] == 'Найпростіші (Найліквідніші) зв’язки':
+                        message = ''
+
                         if settings[0] and 'Binance' in settings[0]:
                             flagtext2 = False
                             
@@ -422,7 +423,10 @@ async def mailing():
                                                                 message += f'{result[0][0]}\n'
                                                                 flagtext = True
                                                             message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
+                        if message:
+                            await bot2.send_message(user[1],message)
                     if spread_direction[0] == 'Міжбіржові':
+                        message = ''
                         if settings[0] and settings[0] and 'Binance' in settings[0] and 'ByBit' in settings[0]:
                             flagtext2 = False
                             
@@ -826,7 +830,11 @@ async def mailing():
                                                             message += f'{result[0][0]}\n'
                                                             flagtext = True
                                                         message += f'{result[line][a]} {result[line+1][0]} +{round(num,2)}%\n'
+                        if message:
+                            await bot2.send_message(user[1],message)
+                    
                     if spread_direction[0] == 'Готівка':
+                        message = ''
                         if settings[0] and 'Binance' in settings[0]:
                                 flagtext2 = False
                                 
@@ -881,7 +889,11 @@ async def mailing():
                                                         message += '\ByBit профіт\n'
                                                         flagtext2 = True
                                                     message += f'{result[line][0]}+ {result[0][row]}  +{round(num,2)}%\n'                        
+                        if message:
+                            await bot2.send_message(user[1],message)
+                    
                     if spread_direction[0] == 'Binance':
+                        message = ''
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[3]
@@ -895,7 +907,10 @@ async def mailing():
                             for i in ranges:
                                 mess = await parse_binance2(i,settings,min_spread[3])
                                 message += mess
+                        if message:
+                            await bot2.send_message(user[1],message)
                     if spread_direction[0] == 'OKX':
+                        message = ''
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[7]
@@ -909,7 +924,11 @@ async def mailing():
                             for i in ranges:
                                 mess = await parse_binance2(i,settings,min_spread[4],sh.title)
                                 message += mess
+                        if message:
+                            await bot2.send_message(user[1],message)
+
                     if spread_direction[0] == 'ByBit':
+                        message = ''
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[10]
@@ -923,8 +942,10 @@ async def mailing():
                             for i in ranges:
                                 mess = await parse_binance2(i,settings,min_spread[5],sh.title)
                                 message += mess
-                        print(message)
+                        if message:
+                            await bot2.send_message(user[1],message)
                     if spread_direction[0] == 'Wise':
+                        message = ''
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[11]
@@ -938,7 +959,12 @@ async def mailing():
                             for i in ranges:
                                 mess = await parse_binance3(i,settings,min_spread[6],sh.title)
                                 message += mess
+                        if message:
+                            await bot2.send_message(user[1],message)
+
+
                     if spread_direction[0] == 'LocalBitcoins':
+                        message = ''
                         service=GoogleSheets(filename='cred.json', google_sheet_name='TheBitok Table | 4975 Зв\'язок P2P')
                         all_sheets = service.sheet.worksheets()
                         sh = all_sheets[13]
@@ -946,8 +972,9 @@ async def mailing():
                         for i in ranges:
                             mess = await parse_binance2(i,settings,min_spread[7],sh.title)
                             message += mess
-                if message:
-                    await bot2.send_message(user[1],message)  
+                        if message:
+                            await bot2.send_message(user[1],message)
+                  
             except:
                 print('none data')
             
