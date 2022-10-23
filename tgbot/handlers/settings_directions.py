@@ -1245,7 +1245,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'binance settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange binance settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange crypto binance settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -1726,7 +1726,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     cur.execute("SELECT cryptocurrency_chosen FROM user_directions_cryptocurrency WHERE user_id = %s and spread_direction = 4",(user[0],))
     cryptocurrency_chosen = cur.fetchone()
     
-    if 'USDT'not in cryptocurrency_chosen[0]:
+    if 'BUSD'not in cryptocurrency_chosen[0]:
         cur.execute('''UPDATE user_directions_cryptocurrency SET cryptocurrency_chosen = cryptocurrency_chosen || ARRAY['BUSD']
             WHERE 
             user_id = %s and spread_direction = 4 AND
@@ -1904,7 +1904,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'binance settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings shib okx settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings shib binance settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -1940,7 +1940,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
             ''',(user[0],user[0]))
         base.commit()
     
-    btn = settings_simple_direction(user_id,'okx settings')
+    btn = settings_simple_direction(user_id,'binance settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
 # direction --> okx settings     
@@ -1979,7 +1979,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'okx settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange okx settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange crypto okx settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -2362,7 +2362,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'bybit settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange bybit settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange crypto bybit settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -2710,7 +2710,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
 # direction --> wise settings     
-@settings_directions_router.callback_query(lambda c: c.data ==  'buy-sell crypto wise settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-sell crypto wise settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -2745,7 +2745,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'wise settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange wise settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange crypto wise settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -3171,7 +3171,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
 # direction --> localbitcoins settings 
-@settings_directions_router.callback_query(lambda c: c.data ==  'buy-sell crypto localbitcoins settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-sell crypto localbitcoins settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))
@@ -3206,7 +3206,7 @@ async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     btn = settings_simple_direction(user_id,'localbitcoins settings')
     await callback_query.message.edit_text('Налаштування',reply_markup=btn.as_markup(),parse_mode="HTML")
     
-@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange localbitcoins settings')
+@settings_directions_router.callback_query(lambda c: c.data ==  'settings buy-exchange crypto localbitcoins settings')
 async def user_start(callback_query: types.CallbackQuery, state = FSMContext):
     user_id = callback_query.from_user.id
     cur.execute("SELECT id FROM users WHERE telegram_id = %s",(str(user_id),))

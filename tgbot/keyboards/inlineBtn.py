@@ -312,12 +312,13 @@ def settings_simple_direction(user_id,direction):
         ))
     elif direction == 'binance settings':
         settings = get_settings_directions(user_id,'Binance')
+        print(settings[3])
         example.row(types.InlineKeyboardButton(
             text=f'Купуємо крипту, продаємо її {"🟢" if settings and settings[3] and "Купуємо крипту, продаємо її" in settings[3] else "🔴"}',
             callback_data='settings buy-sell crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'Купуємо крипту, міняємо на іншу, продаємо як мейкер {"🟢" if settings and settings[3] and "Купуємо крипту, міняємо на іншу, продаємо як мейкер " in settings[3] else "🔴"}',
+            text=f'Купуємо крипту, міняємо на іншу, продаємо як мейкер {"🟢" if settings and settings[3] and "Купуємо крипту, міняємо на іншу, продаємо як мейкер" in settings[3] else "🔴"}',
             callback_data='settings buy-exchange crypto ' +direction
         ))
         example.row(types.InlineKeyboardButton(
@@ -341,7 +342,7 @@ def settings_simple_direction(user_id,direction):
             callback_data='settings abank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
-            text=f'ОщадБанк {"🟢" if settings and settings[1] and "-" in settings[1] else "🔴"}',
+            text=f'ОщадБанк {"🟢" if settings and settings[1] and "ОщадБанк" in settings[1] else "🔴"}',
             callback_data='settings obank ' +direction
         ))
         example.row(types.InlineKeyboardButton(
