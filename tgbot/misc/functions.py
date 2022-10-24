@@ -371,7 +371,7 @@ async def mailing():
                                                         print(True)
                                                         if flag:
                                                             if not flagtext2:
-                                                                message += '\Binance\n'
+                                                                message += '\nBinance\n'
                                                                 flagtext2 = True
                                                             if not flagtext:
                                                                 message += f'{result2[0][0]}\n'
@@ -433,10 +433,11 @@ async def mailing():
                                                 bank = result4[line][a].replace(' ','').split('→')
                                                 flag = True
                                                 flagtext = False
-                                                
                                                 for i in bank:
                                                     if i not in settings[1]:
+                                                        print(i)
                                                         flag = False
+                                                print(bank,settings[1],flag)
                                                 if flag == True:
                                                     try:
                                                         num = result4[line+1][a].replace('%','').replace(',','.')
@@ -478,6 +479,7 @@ async def mailing():
                                                 for i in bank:
                                                     if i not in settings[1]:
                                                         flag = False
+                                                
                                                 if flag == True:
                                                     try:
                                                         num = result5[line+1][a].replace('%','').replace(',','.')
@@ -772,12 +774,12 @@ async def mailing():
                                             for i in bank:
                                                 if i not in settings[1]:
                                                     flag = False
+                                            print(bank,settings[1],flag)
                                             if flag == True:
                                                 try:
                                                     num = result20[line+1][a].replace('%','').replace(',','.')
                                                     
-                                                    if type(num) == int or type(num) == float and float(num) > min_spread[1][0]:
-                                                        
+                                                    if float(num) > min_spread[1][0]:
                                                         if flag:
                                                             if not flagtext2:
                                                                 message += 'Купуємо на OKX продаємо на Binance\n'
@@ -987,13 +989,16 @@ async def mailing():
                                     if cr[1] in settings[2]:
                                         for line in range(len(result13)):
                                             if line != 0:
-                                                if type(result13[line][row]) == int or type(result13[line][row]) == float:
+                                                try:
+                                                # if type(result13[line][row]) == int or type(result13[line][row]) == float:
                                                     num = float(result13[line][row])/1000
                                                     if result13[line][0] in settings[1] and num > min_spread[2][0]:
                                                         if not flagtext2:
                                                             message += '\nBinance профіт\n'
                                                             flagtext2 = True
                                                         message += f'{result13[line][0]}+ {result13[0][row]}  + {round(float(num),2)} %\n'
+                                                except: 
+                                                    pass
                         if settings[0] and 'ByBit' in settings[0]:
                                 flagtext2 = False
                                 
@@ -1015,12 +1020,15 @@ async def mailing():
                                     if cr[1] in settings[2]:
                                         for line in range(len(result14)):
                                             if line != 0:
-                                                num = float(result14[line][row])/1000
-                                                if result14[line][0] in settings[1] and num > min_spread[2][0]:
-                                                    if not flagtext2:
-                                                        message += '\nByBit профіт\n'
-                                                        flagtext2 = True
-                                                    message += f'{result14[line][0]}+ {result14[0][row]}  + {str(round(float(num),2))} %\n'                        
+                                                try:
+                                                    num = float(result14[line][row])/1000
+                                                    if result14[line][0] in settings[1] and num > min_spread[2][0]:
+                                                        if not flagtext2:
+                                                            message += '\nByBit профіт\n'
+                                                            flagtext2 = True
+                                                        message += f'{result14[line][0]}+ {result14[0][row]}  + {str(round(float(num),2))} %\n'                        
+                                                except: 
+                                                    pass
                         if message:
                             print('send cash message')
                             
@@ -1048,8 +1056,11 @@ async def mailing():
                                 mess = await parse_binance1(i,settings,min_spread[3])
                                 message += mess
                         if message:
-                            print(message)
-                            await bot2.send_message(user[1],message)
+                            if len(message) > 4096:
+                                for x in range(0, len(message), 4096):
+                                    await bot2.send_message(user[1], message[x:x+4096])
+                            else:
+                                await bot2.send_message(user[1], message)
                             
                     if spread_direction[0] == 'OKX':
                         message = ''
@@ -1067,8 +1078,11 @@ async def mailing():
                                 mess = await parse_binance2(i,settings,min_spread[4])
                                 message += mess
                         if message:
-                            print(message)
-                            await bot2.send_message(user[1],message)
+                            if len(message) > 4096:
+                                for x in range(0, len(message), 4096):
+                                    await bot2.send_message(user[1], message[x:x+4096])
+                            else:
+                                await bot2.send_message(user[1], message)
 
                     if spread_direction[0] == 'ByBit':
                         message = ''
@@ -1086,8 +1100,11 @@ async def mailing():
                                 mess = await parse_binance2(i,settings,min_spread[5])
                                 message += mess
                         if message:
-                            print(message)
-                            await bot2.send_message(user[1],message)
+                            if len(message) > 4096:
+                                for x in range(0, len(message), 4096):
+                                    await bot2.send_message(user[1], message[x:x+4096])
+                            else:
+                                await bot2.send_message(user[1], message)
                             
                     if spread_direction[0] == 'Wise':
                         message = ''
@@ -1105,8 +1122,11 @@ async def mailing():
                                 mess = await parse_binance3(i,settings,min_spread[6])
                                 message += mess
                         if message:
-                            print(message)
-                            await bot2.send_message(user[1],message)
+                            if len(message) > 4096:
+                                for x in range(0, len(message), 4096):
+                                    await bot2.send_message(user[1], message[x:x+4096])
+                            else:
+                                await bot2.send_message(user[1], message)
 
                     if spread_direction[0] == 'LocalBitcoins':
                         message = ''
@@ -1118,8 +1138,11 @@ async def mailing():
                             mess = await parse_binance2(i,settings,min_spread[7])
                             message += mess
                         if message:
-                            print(message)
-                            await bot2.send_message(user[1],message)
+                            if len(message) > 4096:
+                                for x in range(0, len(message), 4096):
+                                    await bot2.send_message(user[1], message[x:x+4096])
+                            else:
+                                await bot2.send_message(user[1], message)
 
             except:
                 print('none data')
